@@ -103,6 +103,13 @@ export default class SimpleImage {
     ];
   }
 
+  static get toolbox() {
+    return {
+      title: 'Image',
+      icon: '<svg width="17" height="15" viewBox="0 0 336 276" xmlns="http://www.w3.org/2000/svg"><path d="M291 150V79c0-19-15-34-34-34H79c-19 0-34 15-34 34v42l67-44 81 72 56-29 42 30zm0 52l-43-30-56 30-81-67-66 39v23c0 19 15 34 34 34h178c17 0 31-13 34-29zM79 0h178c44 0 79 35 79 79v118c0 44-35 79-79 79H79c-44 0-79-35-79-79V79C0 35 35 0 79 0z"/></svg>'
+    };
+  }
+
   /**
    * Creates a Block:
    *  1) Show preloader
@@ -113,6 +120,9 @@ export default class SimpleImage {
    */
   render() {
     const wrapper = this._make('div', [this.CSS.baseClass, this.CSS.wrapper]),
+        loadButton = this._make('input', [], {
+          type: 'file'
+        }),
         loader = this._make('div', this.CSS.loading),
         imageHolder = this._make('div', this.CSS.imageHolder),
         image = this._make('img'),
@@ -121,13 +131,13 @@ export default class SimpleImage {
           innerHTML: this.data.caption || '',
         });
 
+    this.nodes.imageHolder = imageHolder;
+    this.nodes.wrapper = wrapper;
+    this.nodes.image = image;
+    this.nodes.caption = caption;
+    this.nodes.loader = loader;
+
     caption.dataset.placeholder = 'Enter a caption';
-
-    wrapper.appendChild(loader);
-
-    if (this.data.url) {
-      image.src = this.data.url;
-    }
 
     image.onload = () => {
       wrapper.classList.remove(this.CSS.loading);
@@ -135,6 +145,11 @@ export default class SimpleImage {
       wrapper.appendChild(imageHolder);
       wrapper.appendChild(caption);
       loader.remove();
+      if (loadButton !== null) {
+        loadButton.remove();
+        loadButton = null;
+      }
+      this.nodes.loader = null;
       this._acceptTuneView();
     };
 
@@ -143,12 +158,32 @@ export default class SimpleImage {
       console.log('Failed to load an image', e);
     };
 
-    this.nodes.imageHolder = imageHolder;
-    this.nodes.wrapper = wrapper;
-    this.nodes.image = image;
-    this.nodes.caption = caption;
+    if (this.data.url) {
+      wrapper.appendChild(loader);
+      image.src = this.data.url;
+    }  else {
+      wrapper.appendChild(loadButton);
+      loadButton.onchange = (e) => {
+        const file = e.target.files[0];
+        const url = URL.createObjectURL(file);
+
+        this.data = {
+          url: url,
+          caption: file.name
+        };
+
+        loadButton.remove();
+        loadButton = null;
+      };
+    }
 
     return wrapper;
+  }
+
+  removed() {
+    if (this.data.url && this.data.url.startsWith('blob:')) {
+      URL.revokeObjectURL(this.data.url);
+    }
   }
 
   /**
@@ -201,7 +236,7 @@ export default class SimpleImage {
    * @param {File} file
    * @returns {Promise<SimpleImageData>}
    */
-  onDropHandler(file) {
+  /*onDropHandler(file) {
     const reader = new FileReader();
 
     reader.readAsDataURL(file);
@@ -214,7 +249,7 @@ export default class SimpleImage {
         });
       };
     });
-  }
+  }*/
 
   /**
    * On paste callback that is fired from Editor.
@@ -244,14 +279,19 @@ export default class SimpleImage {
       case 'file': {
         const { file } = event.detail;
 
-        this.onDropHandler(file)
+        /*this.onDropHandler(file)
           .then(data => {
             this.data = data;
-          });
-
+          });*/
+        this.data = {
+          url: URL.createObjectURL(file),
+          caption: file.name
+        };
         break;
       }
     }
+    this.nodes.loadButton.remove();
+    this.nodes.loadButton = null;
   }
 
   /**
