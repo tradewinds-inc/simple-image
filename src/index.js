@@ -120,9 +120,6 @@ export default class SimpleImage {
    */
   render() {
     const wrapper = this._make('div', [this.CSS.baseClass, this.CSS.wrapper]),
-        loadButton = this._make('input', [], {
-          type: 'file'
-        }),
         loader = this._make('div', this.CSS.loading),
         imageHolder = this._make('div', this.CSS.imageHolder),
         image = this._make('img'),
@@ -130,12 +127,18 @@ export default class SimpleImage {
           contentEditable: !this.readOnly,
           innerHTML: this.data.caption || '',
         });
+    let 
+        loadButton = this._make('input', [], {
+          type: 'file'
+        })
+    ;
 
     this.nodes.imageHolder = imageHolder;
     this.nodes.wrapper = wrapper;
     this.nodes.image = image;
     this.nodes.caption = caption;
     this.nodes.loader = loader;
+    this.nodes.loadButton = loadButton;
 
     caption.dataset.placeholder = 'Enter a caption';
 
