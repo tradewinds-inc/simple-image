@@ -148,9 +148,8 @@ export default class SimpleImage {
       wrapper.appendChild(imageHolder);
       wrapper.appendChild(caption);
       loader.remove();
-      if (loadButton !== null) {
+      if (loadButton) {
         loadButton.remove();
-        loadButton = null;
       }
       this.nodes.loader = null;
       this._acceptTuneView();
@@ -176,7 +175,6 @@ export default class SimpleImage {
         };
 
         loadButton.remove();
-        loadButton = null;
       };
     }
 
