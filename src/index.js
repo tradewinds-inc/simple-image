@@ -127,7 +127,7 @@ export default class SimpleImage {
           contentEditable: !this.readOnly,
           innerHTML: this.data.caption || '',
         });
-    let 
+    let
         loadButton = this._make('input', [], {
           type: 'file'
         })
@@ -239,27 +239,27 @@ export default class SimpleImage {
    * @param {File} file
    * @returns {Promise<SimpleImageData>}
    */
-  /*onDropHandler(file) {
+  onDropHandler(file) {
     const reader = new FileReader();
 
     reader.readAsDataURL(file);
 
     return new Promise(resolve => {
-      reader.onload = (event) => {
+      reader.onloadend = (event) => {
         resolve({
-          url: event.target.result,
+          url: reader.result ?? event.target.result,
           caption: file.name,
         });
       };
     });
-  }*/
+  }
 
   /**
    * On paste callback that is fired from Editor.
    *
    * @param {PasteEvent} event - event with pasted config
    */
-  onPaste(event) {
+  async onPaste(event) {
     switch (event.type) {
       case 'tag': {
         const img = event.detail.data;
@@ -282,14 +282,14 @@ export default class SimpleImage {
       case 'file': {
         const { file } = event.detail;
 
-        /*this.onDropHandler(file)
+        this.onDropHandler(file)
           .then(data => {
             this.data = data;
-          });*/
-        this.data = {
+          });
+        /*this.data = {
           url: URL.createObjectURL(file),
           caption: file.name
-        };
+        };*/
         break;
       }
     }
