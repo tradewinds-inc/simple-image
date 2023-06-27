@@ -157,7 +157,7 @@ export default class SimpleImage {
       wrapper.appendChild(caption);
       loader.remove();
       if (loadButton) {
-        loadButton.remove();
+        loadButton?.remove?.();
       }
       this.nodes.loader = null;
       this._acceptTuneView();
@@ -182,17 +182,11 @@ export default class SimpleImage {
           caption: file.name
         };
 
-        loadButton.remove();
+        loadButton?.remove?.();
       };
     }
 
     return wrapper;
-  }
-
-  removed() {
-    if (this.data.url && this.data.url.startsWith('blob:')) {
-      URL.revokeObjectURL(this.data.url);
-    }
   }
 
   /**
@@ -305,15 +299,13 @@ export default class SimpleImage {
           .then(data => {
             this.data = data;
           });
-        /*this.data = {
-          url: URL.createObjectURL(file),
-          caption: file.name
-        };*/
         break;
       }
     }
-    this.nodes.loadButton.remove();
-    this.nodes.loadButton = null;
+    if (this.nodes.loadButton) {
+      this.nodes.loadButton?.remove?.();
+      this.nodes.loadButton = null;
+    }
   }
 
   /**
