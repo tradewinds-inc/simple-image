@@ -5,6 +5,14 @@ import './index.css';
 
 import { IconAddBorder, IconStretch, IconAddBackground } from '@codexteam/icons';
 
+function _getBase64(file, onLoadCallback) {
+  return new Promise(function (resolve, reject) {
+    var reader = new FileReader();
+    reader.onload = function () { return resolve(reader.result); };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 /**
  * SimpleImage Tool for the Editor.js
  * Works only with pasted image URLs and requires no server-side uploader.
@@ -203,6 +211,17 @@ export default class SimpleImage {
     return Object.assign(this.data, {
       url: image.src,
       caption: caption.innerHTML,
+    });
+  }
+
+  uploadByFile(file){
+    return _getBase64(file, function (e) { }).then((data) => {
+      return {
+        success: 1,
+        file: {
+          url: data
+        }
+      };
     });
   }
 
