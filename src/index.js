@@ -157,7 +157,7 @@ export default class SimpleImage {
       wrapper.appendChild(caption);
       loader.remove();
       if (loadButton) {
-        loadButton?.remove?.();
+        loadButton.remove();
       }
       this.nodes.loader = null;
       this._acceptTuneView();
@@ -182,7 +182,7 @@ export default class SimpleImage {
           caption: file.name
         };
 
-        loadButton?.remove?.();
+        loadButton.remove();
       };
     }
 
@@ -260,7 +260,7 @@ export default class SimpleImage {
     return new Promise(resolve => {
       reader.onloadend = (event) => {
         resolve({
-          url: reader.result ?? event.target.result,
+          url: reader.result ? reader.result : event.target.result,
           caption: file.name,
         });
       };
@@ -303,7 +303,7 @@ export default class SimpleImage {
       }
     }
     if (this.nodes.loadButton) {
-      this.nodes.loadButton?.remove?.();
+      this.nodes.loadButton.remove();
       this.nodes.loadButton = null;
     }
   }
