@@ -272,7 +272,7 @@ export default class SimpleImage {
    *
    * @param {PasteEvent} event - event with pasted config
    */
-  async onPaste(event) {
+  onPaste(event) {
     switch (event.type) {
       case 'tag': {
         const img = event.detail.data;
