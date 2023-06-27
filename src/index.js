@@ -210,7 +210,7 @@ export default class SimpleImage {
       return this.data;
     }
 
-    console.log('save:', image.src);
+    console.log('1 save:', image.src);
     return Object.assign(this.data, {
       url: image.src,
       caption: caption.innerHTML,
