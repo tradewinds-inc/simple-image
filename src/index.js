@@ -5,7 +5,7 @@ import './index.css';
 
 import { IconAddBorder, IconStretch, IconAddBackground } from '@codexteam/icons';
 
-function _getBase64(file, onLoadCallback) {
+function _getBase64(file) {
   return new Promise(function (resolve, reject) {
     var reader = new FileReader();
     reader.onload = function () { return resolve(reader.result); };
@@ -173,12 +173,19 @@ export default class SimpleImage {
       image.src = this.data.url;
     }  else {
       wrapper.appendChild(loadButton);
-      loadButton.onchange = (e) => {
+      loadButton.onchange = async (e) => {
         const file = e.target.files[0];
-        const url = URL.createObjectURL(file);
+
+        const base64 = await _getBase64(file)
+          .then((data) => ({
+            success: 1,
+            file: {
+              url: data
+            }
+          }));
 
         this.data = {
-          url: url,
+          url: base64.file.url,
           caption: file.name
         };
 
@@ -211,7 +218,7 @@ export default class SimpleImage {
   }
 
   uploadByFile(file){
-    return _getBase64(file, function (e) { }).then((data) => {
+    return _getBase64(file).then((data) => {
       return {
         success: 1,
         file: {
