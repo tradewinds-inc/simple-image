@@ -205,9 +205,11 @@ export default class SimpleImage {
         caption = blockContent.querySelector('.' + this.CSS.input);
 
     if (!image) {
+      console.log('no img save:', this.data);
       return this.data;
     }
 
+    console.log('save:', image.src);
     return Object.assign(this.data, {
       url: image.src,
       caption: caption.innerHTML,
